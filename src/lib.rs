@@ -23,10 +23,10 @@ pub struct Deck
     spades: [Card; 13],
 }
 
-impl Deck
+impl Default for Deck
 {
     /// Creates a new card deck arranged in New Deck Order by default.
-    fn new() -> Self
+    fn default() -> Self
     {
         Self
         {
