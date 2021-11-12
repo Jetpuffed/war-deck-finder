@@ -1,3 +1,6 @@
+use rand::prelude::*;
+
+#[derive(Clone, Copy, Debug)]
 pub enum Card
 {
     Two,
@@ -17,15 +20,15 @@ pub enum Card
 
 pub struct Deck
 {
-    hearts: [Card; 13],
-    clubs: [Card; 13],
-    diamonds: [Card; 13],
-    spades: [Card; 13],
+    pub hearts: [Card; 13],
+    pub clubs: [Card; 13],
+    pub diamonds: [Card; 13],
+    pub spades: [Card; 13],
 }
 
 impl Default for Deck
 {
-    /// Creates a new card deck arranged in New Deck Order by default.
+    /// Constructs all suits with their default arrangement.
     fn default() -> Self
     {
         Self
@@ -35,5 +38,42 @@ impl Default for Deck
             diamonds: [Card::King, Card::Queen, Card::Jack, Card::Ten, Card::Nine, Card::Eight, Card::Seven, Card::Six, Card::Five, Card::Four, Card::Three, Card::Two, Card::Ace],
             spades: [Card::King, Card::Queen, Card::Jack, Card::Ten, Card::Nine, Card::Eight, Card::Seven, Card::Six, Card::Five, Card::Four, Card::Three, Card::Two, Card::Ace],
         }
+    }
+}
+
+impl Deck
+{
+    pub fn new() -> Self
+    {
+        Deck::default()
+    }
+
+    pub fn as_vec(&self) -> Vec<Card>
+    {
+        let mut tmp = Vec::with_capacity(52);
+
+        tmp.append(&mut self.hearts.to_vec());
+        tmp.append(&mut self.clubs.to_vec());
+        tmp.append(&mut self.diamonds.to_vec());
+        tmp.append(&mut self.spades.to_vec());
+        tmp.reverse();
+
+        tmp
+    }
+
+    pub fn as_shuffled(&self, mut rng: ThreadRng) -> Vec<Card>
+    {
+        let mut deck = self.as_vec();
+        deck.shuffle(&mut rng);
+
+        deck
+    }
+
+    pub fn split_deck(&self, rng: ThreadRng) -> (Vec<Card>, Vec<Card>)
+    {
+        let deck = self.as_shuffled(rng);
+        let (a, b) = deck.split_at(26);
+
+        (a.to_vec(), b.to_vec())
     }
 }
